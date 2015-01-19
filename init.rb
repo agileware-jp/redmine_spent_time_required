@@ -1,16 +1,14 @@
 require 'redmine'
-require File.dirname(__FILE__) + '/lib/issues_controller_patch.rb'
+require File.dirname(__FILE__) + '/lib/issue_patch.rb'
 
 if Rails::VERSION::MAJOR >= 3
-  ActionDispatch::Callbacks.to_prepare do
-    require_dependency 'issues_controller'
-    IssuesController.send(:include, RedmineSpentTimeRequired::Patches::IssuesControllerPatch)
+  ActionDispatch::Reloader.to_prepare do
+    Issue.send(:include, RedmineSpentTimeRequired::Patches::IssuePatch)
   end
 else
   require 'dispatcher'
   Dispatcher.to_prepare do
-    require_dependency 'issues_controller'
-    IssuesController.send(:include, RedmineSpentTimeRequired::Patches::IssuesControllerPatch)
+    Issue.send(:include, RedmineSpentTimeRequired::Patches::IssuePatch)
   end
 end
 
